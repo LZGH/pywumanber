@@ -1,6 +1,7 @@
 **Installation**
 ================
-Use `zypper in python-pywumanber`. Currently, this lives in home:babelworx:python
+make
+cp wumanber.so /usr/lib/python2.7/site-packages/
 
 **Using pywumanbver**
 =====================
