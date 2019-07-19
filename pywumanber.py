@@ -23,11 +23,9 @@ from urllib2 import urlopen,URLError,HTTPError,Request
 WM_CALLBACK = CFUNCTYPE(c_int,c_int,c_int)
 
 class WuManber:
-  def __init__(self,keys,text,so='wumanber.so'):
+  def __init__(self,so='wumanber.so'):
     """ Initialise the WuManber object with required parameters
         Use __loadText__ and __loadKeywords__ to generate CTypes
-        @keys:  list, string or filename
-        @text:  string, url or filename
         @so:    name of the shared library linked to
     """
     from distutils.sysconfig import get_python_lib
@@ -41,10 +39,8 @@ class WuManber:
     self.nocase = None # NOT A PYTHON TYPE
     self.wm = None # NOT A PYTHON TYPE
     self.keydict = {}
-    self.__loadText__(text)
-    self.__loadKeywords__(keys)
-        
-  def __loadText__(self,text):
+
+  def loadText(self,text):
     """ Parse the text provided by __init__. Depending on the type
         and whether the text is actually a URL, read the text into
         memory and create a CType c_char_p
@@ -78,7 +74,7 @@ class WuManber:
         self.len_ctext = c_int(len(text))
     
       
-  def __loadKeywords__(self,keys):
+  def loadKeywords(self,keys):
     """ Depending on the type() of keys, first create a Python list of
         keywords and then convert that to a C array of CType c_char_p
         @keys:  list, string or filename
