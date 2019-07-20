@@ -8,11 +8,9 @@ cp wumanber.so /usr/lib/python2.7/site-packages/
 The following code should do an easy search:
 
 from pywumanber import WuManber
-wm = WuManber()
-wm.loadKeywords(['list','of','keywords','you','want','to','find'])
+wm = WuManber(['list','of','keywords','you','want','to','find'])
 wm.loadText("text in which you want to search")
-
-wm.search_text()
+wm.search_text(True,True)
 
 When you initialise a WuManber object you must pass the keywords and the string. This can be done in
 a number of ways.

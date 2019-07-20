@@ -23,9 +23,10 @@ from urllib2 import urlopen,URLError,HTTPError,Request
 WM_CALLBACK = CFUNCTYPE(c_int,c_int,c_int)
 
 class WuManber:
-  def __init__(self,so='wumanber.so'):
+  def __init__(self, keys, so='wumanber.so'):
     """ Initialise the WuManber object with required parameters
         Use __loadText__ and __loadKeywords__ to generate CTypes
+        @keys:  list, string or filename
         @so:    name of the shared library linked to
     """
     from distutils.sysconfig import get_python_lib
@@ -38,7 +39,8 @@ class WuManber:
     self.text = None
     self.nocase = None # NOT A PYTHON TYPE
     self.wm = None # NOT A PYTHON TYPE
-    self.keydict = {}
+    self.keydict = []
+    self.__loadKeywords__(keys)
 
   def loadText(self,text):
     """ Parse the text provided by __init__. Depending on the type
@@ -74,7 +76,7 @@ class WuManber:
         self.len_ctext = c_int(len(text))
     
       
-  def loadKeywords(self,keys):
+  def __loadKeywords__(self,keys):
     """ Depending on the type() of keys, first create a Python list of
         keywords and then convert that to a C array of CType c_char_p
         @keys:  list, string or filename
@@ -111,7 +113,7 @@ class WuManber:
     i = 0
     for pystring in self.keywords:
       self.clist_of_cstrings[i] = c_char_p(pystring)
-      self.keydict[i] = array('l', [])
+      # self.keydict[i] = array('l', [])
       i+=1
         
   
@@ -141,7 +143,7 @@ class WuManber:
         with WM_CALLBACK which is defined at the beginning of this file
     """
     idx = idx-1 # C starts counting at 1?
-    self.keydict[idx].append(ptr)
+    self.keydict.append(self.clist_of_cstrings[idx])
     return 0
       
   def search_text(self,nocase=True,verbose=False):
@@ -151,6 +153,7 @@ class WuManber:
         @returns: int, the number of matches found in the text
     """
     s = time.time()
+    self.keydict = []
     if nocase:
       self.nocase = c_int(1)
     else:
@@ -164,4 +167,6 @@ class WuManber:
     wm_ret = self.so.wm_search_text(self.wm,self.ctext,self.len_ctext,
       cb,null_ptr2)
     sys.stderr.write("search_text took %.2f seconds\n"%((time.time()-s)))
+    # return self.keydict
     return wm_ret
+
