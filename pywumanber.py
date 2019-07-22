@@ -146,7 +146,7 @@ class WuManber:
     self.keydict.append(self.clist_of_cstrings[idx])
     return 0
       
-  def search_text(self,nocase=True,verbose=False):
+  def search_text(self,nocase=True,verbose=True):
     """ search_text is responsible for actually performing the text search
         @nocase:  boolean, whether to use case sensitive searching or not
         @verbose  boolean, whether to use the callback to print results or not
